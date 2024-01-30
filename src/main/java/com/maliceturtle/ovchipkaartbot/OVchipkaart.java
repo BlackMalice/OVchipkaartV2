@@ -29,12 +29,15 @@ public class OVchipkaart {
         builder.setStatus(OnlineStatus.ONLINE);
         builder.setActivity(Activity.listening("er zijn en staking op hele Nederland"));
         shardManager=builder.build();
+       // shardManager.getGuildById(982617669884854322L).updateCommands();
 
        // shardManager.addEventListener(new EventListener());
-        shardManager.addEventListener(new MessageListener());
+        //shardManager.addEventListener(new MessageListener());
 
         CommandManager manager=new CommandManager();
         manager.add(new Play());
+        manager.add(new Stop());
+        manager.add(new Skip());
         shardManager.addEventListener(manager);
 
 

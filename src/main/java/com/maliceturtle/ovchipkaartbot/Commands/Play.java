@@ -5,10 +5,13 @@ import com.maliceturtle.ovchipkaartbot.lavaplayer.PlayerManager;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,16 +28,16 @@ public class Play  implements Icommand {
 
     @Override
     public List<OptionData> getOptions() {
-        List<OptionData> options=new ArrayList<>();
-        options.add(new OptionData(OptionType.STRING,"name"," Name of the song to play",true));
+        List<OptionData> options = new ArrayList<>();
+        options.add(new OptionData(OptionType.STRING, "name", "Name of the song to play", true));
         return options;
-
     }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         Member member=event.getMember();
         GuildVoiceState membervoiceState=member.getVoiceState();
+
         if(!membervoiceState.inAudioChannel()){
             event.reply("You need to be in voice channel to execute this command").queue();
             return;
@@ -50,9 +53,19 @@ public class Play  implements Icommand {
 
 
         }
+        String name=event.getOption("name").getAsString();
+
+
+        try {
+            new URI(name);
+        }
+        catch (URISyntaxException e){
+            name ="ytsearch:"+name;
+        }
         PlayerManager playerManager=PlayerManager.get();
         event.reply("Playing").queue();
-        playerManager.play(event.getGuild(),event.getOption("name").getAsString());
+        playerManager.play(event.getGuild(),name);
+
 
 
 
